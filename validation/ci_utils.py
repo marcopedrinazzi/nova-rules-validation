@@ -80,7 +80,7 @@ def print_header(title: str) -> None:
     print(f"{'=' * 60}")
 
 
-def print_summary(passed: int, failed: int, warnings: int) -> None:
+def print_summary(passed: int, failed: int, third: int, third_label: str = "warnings") -> None:
     """Print final summary with counts and color-coded status."""
     print(f"\n{'-' * 60}")
     parts = [f"{Fore.GREEN}{passed} passed{Style.RESET_ALL}"]
@@ -88,15 +88,15 @@ def print_summary(passed: int, failed: int, warnings: int) -> None:
         parts.append(f"{Fore.RED}{failed} failed{Style.RESET_ALL}")
     else:
         parts.append(f"{failed} failed")
-    if warnings > 0:
-        parts.append(f"{Fore.YELLOW}{warnings} warnings{Style.RESET_ALL}")
+    if third > 0:
+        parts.append(f"{Fore.YELLOW}{third} {third_label}{Style.RESET_ALL}")
     else:
-        parts.append(f"{warnings} warnings")
+        parts.append(f"{third} {third_label}")
     print(f"  Summary: {', '.join(parts)}")
 
     if failed > 0:
         print(f"  Status: {Fore.RED}FAILED{Style.RESET_ALL}")
-    elif warnings > 0:
-        print(f"  Status: {Fore.GREEN}PASSED{Style.RESET_ALL} (with warnings)")
+    elif third > 0:
+        print(f"  Status: {Fore.GREEN}PASSED{Style.RESET_ALL} (with {third_label})")
     else:
         print(f"  Status: {Fore.GREEN}PASSED{Style.RESET_ALL}")

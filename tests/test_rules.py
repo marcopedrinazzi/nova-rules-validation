@@ -210,7 +210,7 @@ def run(
             failed += 1
             print_fail(f"{test_name} ({rule_name}): {detail}")
 
-    print_summary(passed, failed, skipped)
+    print_summary(passed, failed, skipped, third_label="skipped")
     exit_code = 0 if failed == 0 else 1
     return exit_code, {"passed": passed, "failed": failed, "skipped": skipped}
 
