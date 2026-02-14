@@ -1,24 +1,32 @@
-# Nova Rules Validation
+# Nova Rules Validation and Testing
+
+These scripts are designed to run as part of the CI pipeline on every push and pull request. They can also be run locally to validate rules before pushing.
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
 
 ### Running Tests Locally
 
 Tests use keyword and semantic matching to validate rules against known prompts. LLM-based checks are skipped in CI (no API key).
 
 ```bash
-uv run --python 3.11 --with-requirements requirements.txt tests/test_rules.py --rules-dir . --tests-dir tests/ -v
+python3 tests/test_rules.py --rules-dir . --tests-dir tests/ -v
 ```
 
 ### Running Validation
 
 ```bash
 # Syntax validation — checks all .nov files parse correctly
-uv run --python 3.11 --with-requirements requirements.txt validation/validate_syntax.py --rules-dir . -v
+python3 validation/validate_syntax.py --rules-dir . -v
 
 # Metadata validation — checks required meta fields (description, author, severity, etc.)
-uv run --python 3.11 --with-requirements requirements.txt validation/validate_metadata.py --rules-dir . -v
+python3 validation/validate_metadata.py --rules-dir . -v
 
 # Lint — checks for best practices (unused variables, empty sections, etc.)
-uv run --python 3.11 --with-requirements requirements.txt validation/lint_rules.py --rules-dir . -v
+python3 validation/lint_rules.py --rules-dir . -v
 ```
 
 ### Writing Test Cases
