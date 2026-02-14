@@ -107,10 +107,14 @@ def run(
     total_rules = len(successes)
     print_header(f"Metadata Validation: {total_rules} rule(s)")
 
+    fail_messages = []
+    warn_messages = []
+    pass_messages = []
+
     if parse_errors:
         for fpath, err in parse_errors:
             relative = os.path.relpath(fpath, rules_dir)
-            print_fail(f"{relative}: Parse error (skipped) - {err}")
+            fail_messages.append(f"{relative}: Parse error (skipped) - {err}")
 
     passed = 0
     failed = 0
@@ -127,20 +131,43 @@ def run(
         if errors:
             failed += 1
             for e in errors:
-                print_fail(f"{relative} -> {rule.name}: {e}")
+                fail_messages.append(f"{relative} -> {rule.name}: {e}")
             for w in warnings:
-                print_warn(f"{relative} -> {rule.name}: {w}")
+                warn_messages.append(f"{relative} -> {rule.name}: {w}")
         elif warnings:
             warned += 1
             passed += 1
             if verbose:
-                print_pass(f"{relative} -> {rule.name}: metadata OK")
+                pass_messages.append(f"{relative} -> {rule.name}: metadata OK")
             for w in warnings:
-                print_warn(f"{relative} -> {rule.name}: {w}")
+                warn_messages.append(f"{relative} -> {rule.name}: {w}")
         else:
             passed += 1
             if verbose:
-                print_pass(f"{relative} -> {rule.name}: metadata OK")
+                pass_messages.append(f"{relative} -> {rule.name}: metadata OK")
+
+    separator = f"\n{'-' * 60}"
+
+    if fail_messages:
+        print(separator)
+        print(f"  {'FAILURES':^56}")
+        print(f"{'-' * 60}")
+        for msg in fail_messages:
+            print_fail(msg)
+
+    if warn_messages:
+        print(separator)
+        print(f"  {'WARNINGS':^56}")
+        print(f"{'-' * 60}")
+        for msg in warn_messages:
+            print_warn(msg)
+
+    if pass_messages:
+        print(separator)
+        print(f"  {'PASSED':^56}")
+        print(f"{'-' * 60}")
+        for msg in pass_messages:
+            print_pass(msg)
 
     total_warnings = warned
     print_summary(passed, failed + len(parse_errors), total_warnings)
