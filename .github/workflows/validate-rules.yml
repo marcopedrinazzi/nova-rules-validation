@@ -31,10 +31,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - uses: astral-sh/setup-uv@v5
 
+      - name: Install dependencies
+        run: uv pip install -r requirements.txt --system
+
       - name: Run syntax validation
-        run: uv run --python 3.11 --with-requirements requirements.txt validation/validate_syntax.py --rules-dir . -v
+        run: python validation/validate_syntax.py --rules-dir . -v
 
   metadata:
     name: Metadata Validation
@@ -44,10 +51,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - uses: astral-sh/setup-uv@v5
 
+      - name: Install dependencies
+        run: uv pip install -r requirements.txt --system
+
       - name: Run metadata validation
-        run: uv run --python 3.11 --with-requirements requirements.txt validation/validate_metadata.py --rules-dir . -v
+        run: python validation/validate_metadata.py --rules-dir . -v
 
   lint:
     name: Lint Rules
@@ -57,10 +71,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - uses: astral-sh/setup-uv@v5
 
+      - name: Install dependencies
+        run: uv pip install -r requirements.txt --system
+
       - name: Run lint checks
-        run: uv run --python 3.11 --with-requirements requirements.txt validation/lint_rules.py --rules-dir . -v
+        run: python validation/lint_rules.py --rules-dir . -v
 
   test:
     name: Rule Tests
@@ -69,6 +90,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - uses: astral-sh/setup-uv@v5
 
@@ -79,5 +104,8 @@ jobs:
           key: ${{ runner.os }}-hf-all-MiniLM-L6-v2
           restore-keys: ${{ runner.os }}-hf-
 
+      - name: Install dependencies
+        run: uv pip install -r requirements.txt --system
+
       - name: Run rule tests
-        run: uv run --python 3.11 --with-requirements requirements.txt tests/test_rules.py --rules-dir . --tests-dir tests/ -v
+        run: python tests/test_rules.py --rules-dir . --tests-dir tests/ -v
