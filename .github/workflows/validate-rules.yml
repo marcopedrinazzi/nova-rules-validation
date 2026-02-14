@@ -8,6 +8,7 @@ on:
       - 'incidents/**'
       - 'validation/**'
       - 'tests/**'
+      - 'requirements.txt'
       - '.github/workflows/validate-rules.yml'
   pull_request:
     branches: [main]
@@ -16,6 +17,7 @@ on:
       - 'incidents/**'
       - 'validation/**'
       - 'tests/**'
+      - 'requirements.txt'
       - '.github/workflows/validate-rules.yml'
 
 permissions:
@@ -32,9 +34,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Install dependencies
-        run: pip install nova-hunting==0.1.4
+        run: pip install -r requirements.txt
 
       - name: Run syntax validation
         run: python validation/validate_syntax.py --rules-dir . -v
@@ -50,9 +53,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Install dependencies
-        run: pip install nova-hunting==0.1.4
+        run: pip install -r requirements.txt
 
       - name: Run metadata validation
         run: python validation/validate_metadata.py --rules-dir . -v
@@ -68,9 +72,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Install dependencies
-        run: pip install nova-hunting==0.1.4
+        run: pip install -r requirements.txt
 
       - name: Run lint checks
         run: python validation/lint_rules.py --rules-dir . -v
@@ -86,6 +91,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Cache HuggingFace models
         uses: actions/cache@v4
@@ -95,7 +101,7 @@ jobs:
           restore-keys: ${{ runner.os }}-hf-
 
       - name: Install dependencies
-        run: pip install nova-hunting==0.1.4
+        run: pip install -r requirements.txt
 
       - name: Run rule tests
         run: python tests/test_rules.py --rules-dir . --tests-dir tests/ -v
